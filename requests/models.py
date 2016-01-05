@@ -42,7 +42,7 @@ from .exceptions import ContentDecodingError
 from .exceptions import HTTPError
 from .exceptions import InvalidJSONError
 from .exceptions import InvalidURL
-from .exceptions import MissingSchema
+from .exceptions import MissingScheme
 from .exceptions import StreamConsumedError
 from .hooks import default_hooks
 from .status_codes import codes
@@ -437,7 +437,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
 
         if not scheme:
             encoded_url = to_native_string(url, "utf8")
-            raise MissingSchema(
+            raise MissingScheme(
                 f"Invalid URL {encoded_url!r}: No schema supplied. "
                 f"Perhaps you meant http://{encoded_url}?"
             )
