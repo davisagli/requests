@@ -6,6 +6,7 @@ This module contains the primary objects that power Requests.
 """
 import datetime
 import encodings.idna
+import json as complexjson
 import sys
 from io import UnsupportedOperation
 
@@ -27,7 +28,6 @@ from .compat import Callable
 from .compat import chardet
 from .compat import cookielib
 from .compat import is_py2
-from .compat import json as complexjson
 from .compat import JSONDecodeError
 from .compat import Mapping
 from .compat import str

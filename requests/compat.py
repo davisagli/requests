@@ -26,13 +26,6 @@ is_py2 = _ver[0] == 2
 #: Python 3.x?
 is_py3 = _ver[0] == 3
 
-has_simplejson = False
-try:
-    import simplejson as json
-
-    has_simplejson = True
-except ImportError:
-    import json
 
 # ---------
 # Specifics
