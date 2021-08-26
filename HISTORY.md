@@ -6,6 +6,9 @@ Release History
 
 **Breaking Changes**
 
+- Python 2.7 is no longer supported, as a result we have removed dependencies
+  for socks on Python 2.7 and removed the extra to use chardet on Python 3
+
 **Improvements**
 
 **Bug Fixes**
