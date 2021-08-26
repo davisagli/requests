@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
-
 """
 requests.structures
 ~~~~~~~~~~~~~~~~~~~
 
 Data structures that power Requests.
 """
-
 from collections import OrderedDict
 
-from .compat import Mapping, MutableMapping
+from .compat import Mapping
+from .compat import MutableMapping
 
 
 class CaseInsensitiveDict(MutableMapping):
@@ -65,9 +63,7 @@ class CaseInsensitiveDict(MutableMapping):
     def lower_items(self):
         """Like iteritems(), but with all lowercase keys."""
         return (
-            (lowerkey, keyval[1])
-            for (lowerkey, keyval)
-            in self._store.items()
+            (lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items()
         )
 
     def __eq__(self, other):
@@ -91,10 +87,10 @@ class LookupDict(dict):
 
     def __init__(self, name=None):
         self.name = name
-        super(LookupDict, self).__init__()
+        super().__init__()
 
     def __repr__(self):
-        return '<lookup \'%s\'>' % (self.name)
+        return "<lookup '%s'>" % (self.name)
 
     def __getitem__(self, key):
         # We allow fall-through here, so values default to None

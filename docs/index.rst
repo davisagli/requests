@@ -11,7 +11,7 @@ Release v\ |version|. (:ref:`Installation <install>`)
 
 .. image:: https://pepy.tech/badge/requests
     :target: https://pepy.tech/project/requests
-    
+
 .. image:: https://img.shields.io/pypi/l/requests.svg
     :target: https://pypi.org/project/requests/
 
@@ -42,7 +42,7 @@ Release v\ |version|. (:ref:`Installation <install>`)
 See `similar code, sans Requests <https://gist.github.com/973705>`_.
 
 
-**Requests** allows you to send HTTP/1.1 requests extremely easily. 
+**Requests** allows you to send HTTP/1.1 requests extremely easily.
 There's no need to manually add query strings to your
 URLs, or to form-encode your POST data. Keep-alive and HTTP connection pooling
 are 100% automatic, thanks to `urllib3 <https://github.com/urllib3/urllib3>`_.

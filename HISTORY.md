@@ -1711,7 +1711,7 @@ This is not a backwards compatible change.
 -   Automatic Authentication API Change
 -   Smarter Query URL Parameterization
 -   Allow file uploads and POST data together
--   
+-
 
     New Authentication Manager System
 
@@ -1730,7 +1730,7 @@ This is not a backwards compatible change.
 0.2.3 (2011-02-15)
 ------------------
 
--   
+-
 
     New HTTPHandling Methods
 

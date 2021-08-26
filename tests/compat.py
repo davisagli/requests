@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from requests.compat import is_py3
 
 
@@ -14,8 +12,12 @@ except ImportError:
     cStringIO = None
 
 if is_py3:
+
     def u(s):
         return s
+
+
 else:
+
     def u(s):
-        return s.decode('unicode-escape')
+        return s.decode("unicode-escape")
