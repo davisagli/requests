@@ -156,21 +156,17 @@ class RedirectDecisionEngine:
         )
 
 
+_code_to_reason = {
+    301: Decision.Reason.REDIRECT_301,
+    302: Decision.Reason.REDIRECT_302,
+    303: Decision.Reason.REDIRECT_303,
+    307: Decision.Reason.REDIRECT_307,
+    308: Decision.Reason.REDIRECT_308,
+}
+
+
 def _redirect_reason_from_status(response: models.Response) -> Decision.Reason:
-    if response.status_code == codes.moved:
-        return Decision.Reason.REDIRECT_301
-
-    if response.status_code == codes.found:
-        return Decision.Reason.REDIRECT_302
-
-    if response.status_code == codes.other:
-        return Decision.Reason.REDIRECT_303
-
-    if response.status_code == codes.temporary_redirect:
-        return Decision.Reason.REDIRECT_307
-
-    if response.status_code == codes.permanent_redirect:
-        return Decision.Reason.REDIRECT_308
+    return _code_to_reason[response.status_code]
 
 
 def _build_next_url(response: models.Response) -> str:
