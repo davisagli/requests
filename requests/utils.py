@@ -646,7 +646,7 @@ def unquote_unreserved(uri):
             try:
                 c = chr(int(h, 16))
             except ValueError:
-                raise InvalidURL("Invalid percent-escape sequence: '%s'" % h)
+                raise InvalidURL(f"Invalid percent-escape sequence: '{h}'")
 
             if c in UNRESERVED_SET:
                 parts[i] = c + parts[i][2:]
@@ -1017,13 +1017,12 @@ def check_header_validity(header):
     try:
         if not pat.match(value):
             raise InvalidHeader(
-                "Invalid return character or leading space in header: %s"
-                % name
+                f"Invalid return character or leading space in header: {name}"
             )
     except TypeError:
         raise InvalidHeader(
-            "Value for header {%s: %s} must be of type str or "
-            "bytes, not %s" % (name, value, type(value))
+            f"Value for header {{{name}: {value}}} must be of type str or "
+            f"bytes, not {type(value)}"
         )
 
 

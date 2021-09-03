@@ -99,9 +99,7 @@ def _check_cryptography(cryptography_version):
 
     if cryptography_version < [1, 3, 4]:
         warning = (
-            "Old version of cryptography ({}) may cause slowdown.".format(
-                cryptography_version
-            )
+            f"Old version of cryptography ({cryptography_version}) may cause slowdown."
         )
         warnings.warn(warning, RequestsDependencyWarning)
 
@@ -113,10 +111,9 @@ try:
     )
 except (AssertionError, ValueError):
     warnings.warn(
-        "urllib3 ({}) or chardet ({})/charset_normalizer ({}) doesn't match a supported "
-        "version!".format(
-            urllib3.__version__, chardet_version, charset_normalizer_version
-        ),
+        f"urllib3 ({urllib3.__version__}) or chardet ({chardet_version})"
+        f"/charset_normalizer ({charset_normalizer_version}) doesn't match a "
+        f"supported version!",
         RequestsDependencyWarning,
     )
 

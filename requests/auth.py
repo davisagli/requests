@@ -226,19 +226,19 @@ class HTTPDigestAuth(AuthBase):
 
         # XXX should the partial digests be encoded too?
         base = (
-            'username="%s", realm="%s", nonce="%s", uri="%s", '
-            'response="%s"' % (self.username, realm, nonce, path, respdig)
+            f'username="{self.username}", realm="{realm}", nonce="{nonce}", '
+            f'uri="{path}", response="{respdig}"'
         )
         if opaque:
-            base += ', opaque="%s"' % opaque
+            base += f', opaque="{opaque}"'
         if algorithm:
-            base += ', algorithm="%s"' % algorithm
+            base += f', algorithm="{algorithm}"'
         if entdig:
-            base += ', digest="%s"' % entdig
+            base += f', digest="{entdig}"'
         if qop:
             base += f', qop="auth", nc={ncvalue}, cnonce="{cnonce}"'
 
-        return "Digest %s" % (base)
+        return f"Digest {base}"
 
     def handle_redirect(self, r, **kwargs):
         """Reset num_401_calls counter on redirects."""

@@ -33,7 +33,7 @@ class InvalidJSONError(RequestException):
 
 
 class JSONDecodeError(InvalidJSONError, CompatJSONDecodeError):
-    """Couldn't decode the text into json"""
+    """Couldn't decode the text into json."""
 
 
 class HTTPError(RequestException):
@@ -113,7 +113,7 @@ class StreamConsumedError(RequestException, TypeError):
 
 
 class RetryError(RequestException):
-    """Custom retries logic failed"""
+    """Custom retries logic failed."""
 
 
 class UnrewindableBodyError(RequestException):
