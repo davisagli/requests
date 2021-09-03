@@ -511,7 +511,7 @@ class HTTPAdapter(BaseAdapter):
                 decode_content=False,
                 retries=self.max_retries,
                 timeout=timeout,
-                chunked=chunked
+                chunked=chunked,
             )
         except (ProtocolError, OSError) as err:
             raise ConnectionError(err, request=request)
