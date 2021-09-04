@@ -11,6 +11,8 @@ Release History
 
 **Improvements**
 
+- Requests now relies on urllib3 for performing chunked requests.
+
 **Bug Fixes**
 
 dev
