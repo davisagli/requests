@@ -207,7 +207,7 @@ class RequestHooksMixin:
 
         if event not in self.hooks:
             raise ValueError(
-                'Unsupported event specified, with event name "%s"' % (event)
+                f'Unsupported event specified, with event name "{event}"'
             )
 
         if isinstance(hook, Callable):
@@ -293,7 +293,7 @@ class Request(RequestHooksMixin):
         self.cookies = cookies
 
     def __repr__(self):
-        return "<Request [%s]>" % (self.method)
+        return f"<Request [{self.method}]>"
 
     def prepare(self):
         """Constructs a :class:`PreparedRequest <PreparedRequest>` for transmission and returns it."""
@@ -380,7 +380,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         self.prepare_hooks(hooks)
 
     def __repr__(self):
-        return "<PreparedRequest [%s]>" % (self.method)
+        return f"<PreparedRequest [{self.method}]>"
 
     def copy(self):
         p = PreparedRequest()
@@ -438,13 +438,14 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
             raise InvalidURL(*e.args)
 
         if not scheme:
-            error = "Invalid URL {0!r}: No schema supplied. Perhaps you meant http://{0}?"
-            error = error.format(to_native_string(url, "utf8"))
-
-            raise MissingSchema(error)
+            encoded_url = to_native_string(url, "utf8")
+            raise MissingSchema(
+                f"Invalid URL {encoded_url!r}: No schema supplied. "
+                f"Perhaps you meant http://{encoded_url}?"
+            )
 
         if not host:
-            raise InvalidURL("Invalid URL %r: No host supplied" % url)
+            raise InvalidURL(f"Invalid URL {url!r}: No host supplied")
 
         # In general, we want to try IDNA encoding the hostname if the string contains
         # non-ASCII characters. This allows users to automatically get the correct IDNA
@@ -742,7 +743,7 @@ class Response:
         setattr(self, "raw", None)
 
     def __repr__(self):
-        return "<Response [%s]>" % (self.status_code)
+        return f"<Response [{self.status_code}]>"
 
     def __bool__(self):
         """Returns True if :attr:`status_code` is less than 400.
@@ -855,8 +856,7 @@ class Response:
             raise StreamConsumedError()
         elif chunk_size is not None and not isinstance(chunk_size, int):
             raise TypeError(
-                "chunk_size must be an int, it is instead a %s."
-                % type(chunk_size)
+                f"chunk_size must be an int, a {type(chunk_size)} was provided."
             )
         # simulate reading small chunks of the content
         reused_chunks = iter_slices(self._content, chunk_size)
@@ -1036,18 +1036,10 @@ class Response:
             reason = self.reason
 
         if 400 <= self.status_code < 500:
-            http_error_msg = "{} Client Error: {} for url: {}".format(
-                self.status_code,
-                reason,
-                self.url,
-            )
+            http_error_msg = f"{self.status_code} Client Error: {reason} for url: {self.url}"
 
         elif 500 <= self.status_code < 600:
-            http_error_msg = "{} Server Error: {} for url: {}".format(
-                self.status_code,
-                reason,
-                self.url,
-            )
+            http_error_msg = f"{self.status_code} Server Error: {reason} for url: {self.url}"
 
         if http_error_msg:
             raise HTTPError(http_error_msg, response=self)

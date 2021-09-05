@@ -196,7 +196,7 @@ class HTTPAdapter(BaseAdapter):
             maxsize=maxsize,
             block=block,
             strict=True,
-            **pool_kwargs
+            **pool_kwargs,
         )
 
     def proxy_manager_for(self, proxy, **proxy_kwargs):
@@ -222,7 +222,7 @@ class HTTPAdapter(BaseAdapter):
                 num_pools=self._pool_connections,
                 maxsize=self._pool_maxsize,
                 block=self._pool_block,
-                **proxy_kwargs
+                **proxy_kwargs,
             )
         else:
             proxy_headers = self.proxy_headers(proxy)
@@ -232,7 +232,7 @@ class HTTPAdapter(BaseAdapter):
                 num_pools=self._pool_connections,
                 maxsize=self._pool_maxsize,
                 block=self._pool_block,
-                **proxy_kwargs
+                **proxy_kwargs,
             )
 
         return manager
@@ -262,8 +262,8 @@ class HTTPAdapter(BaseAdapter):
 
             if not cert_loc or not os.path.exists(cert_loc):
                 raise OSError(
-                    "Could not find a suitable TLS CA certificate bundle, "
-                    "invalid path: {}".format(cert_loc)
+                    f"Could not find a suitable TLS CA certificate bundle, "
+                    f"invalid path: {cert_loc}"
                 )
 
             conn.cert_reqs = "CERT_REQUIRED"
@@ -286,13 +286,13 @@ class HTTPAdapter(BaseAdapter):
                 conn.key_file = None
             if conn.cert_file and not os.path.exists(conn.cert_file):
                 raise OSError(
-                    "Could not find the TLS certificate file, "
-                    "invalid path: {}".format(conn.cert_file)
+                    f"Could not find the TLS certificate file, "
+                    f"invalid path: {conn.cert_file}"
                 )
             if conn.key_file and not os.path.exists(conn.key_file):
                 raise OSError(
-                    "Could not find the TLS key file, "
-                    "invalid path: {}".format(conn.key_file)
+                    f"Could not find the TLS key file, "
+                    f"invalid path: {conn.key_file}"
                 )
 
     def build_response(self, req, resp):
@@ -348,8 +348,8 @@ class HTTPAdapter(BaseAdapter):
             proxy_url = parse_url(proxy)
             if not proxy_url.host:
                 raise InvalidProxyURL(
-                    "Please check proxy URL. It is malformed"
-                    " and could be missing the host."
+                    "Please check proxy URL. It is malformed "
+                    "and could be missing the host."
                 )
             proxy_manager = self.proxy_manager_for(proxy)
             conn = proxy_manager.connection_from_url(url)
@@ -486,12 +486,12 @@ class HTTPAdapter(BaseAdapter):
             try:
                 connect, read = timeout
                 timeout = TimeoutSauce(connect=connect, read=read)
-            except ValueError as e:
+            except ValueError:
                 # this may raise a string formatting error.
                 err = (
-                    "Invalid timeout {}. Pass a (connect, read) "
-                    "timeout tuple, or a single float to set "
-                    "both timeouts to the same value".format(timeout)
+                    f"Invalid timeout {timeout}. Pass a (connect, read) "
+                    f"timeout tuple, or a single float to set "
+                    f"both timeouts to the same value"
                 )
                 raise ValueError(err)
         elif isinstance(timeout, TimeoutSauce):
