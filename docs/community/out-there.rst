@@ -1,15 +1,6 @@
 Integrations
 ============
 
-Python for iOS
---------------
-
-Requests is built into the wonderful `Python for iOS <https://itunes.apple.com/us/app/python-2.7-for-ios/id485729872?mt=Python8>`_ runtime!
-
-To give it a try, simply::
-
-    import requests
-
 
 Articles & Talks
 ================
