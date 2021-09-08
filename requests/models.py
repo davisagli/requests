@@ -438,7 +438,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
         if not scheme:
             encoded_url = to_native_string(url, "utf8")
             raise MissingScheme(
-                f"Invalid URL {encoded_url!r}: No schema supplied. "
+                f"Invalid URL {encoded_url!r}: No scheme supplied. "
                 f"Perhaps you meant http://{encoded_url}?"
             )
 

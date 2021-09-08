@@ -15,6 +15,10 @@ Release History
 - Remove conditional usage of `simplejson` module. Requests now solely relies
   on the Python 3+ `json` module for encoding and decoding.
 
+- Fix erroenous use of "Schema" instead of "Scheme" in InvalidSchema and
+  MissingSchema exceptions. Renamed to InvalidScheme and MissingScheme
+  respectively. (#4495)
+
 **Improvements**
 
 - Requests now relies on urllib3 for performing chunked requests.
