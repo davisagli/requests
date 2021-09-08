@@ -9,6 +9,9 @@ Release History
 - Python 2.7 is no longer supported, as a result we have removed dependencies
   for socks on Python 2.7 and removed the extra to use chardet on Python 3
 
+- Remove the ``__bool__`` and ``__nonzero__`` methods from a ``Response``
+  object. This resolves issue #2002.
+
 **Improvements**
 
 - Requests now relies on urllib3 for performing chunked requests.
