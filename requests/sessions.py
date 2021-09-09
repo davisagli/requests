@@ -25,7 +25,7 @@ from .cookies import merge_cookies
 from .cookies import RequestsCookieJar
 from .exceptions import ChunkedEncodingError
 from .exceptions import ContentDecodingError
-from .exceptions import InvalidSchema
+from .exceptions import InvalidScheme
 from .exceptions import TooManyRedirects
 from .hooks import default_hooks
 from .hooks import dispatch_hook
@@ -817,7 +817,7 @@ class Session(SessionRedirectMixin):
                 return adapter
 
         # Nothing matches :-/
-        raise InvalidSchema(f"No connection adapters were found for {url!r}")
+        raise InvalidScheme(f"No connection adapters were found for {url!r}")
 
     def close(self):
         """Closes all adapters and as such the session"""

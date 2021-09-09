@@ -32,9 +32,9 @@ from requests.exceptions import ConnectTimeout
 from requests.exceptions import InvalidHeader
 from requests.exceptions import InvalidJSONError
 from requests.exceptions import InvalidProxyURL
-from requests.exceptions import InvalidSchema
+from requests.exceptions import InvalidScheme
 from requests.exceptions import InvalidURL
-from requests.exceptions import MissingSchema
+from requests.exceptions import MissingScheme
 from requests.exceptions import ProxyError
 from requests.exceptions import ReadTimeout
 from requests.exceptions import RetryError
@@ -90,10 +90,10 @@ class TestRequests:
     @pytest.mark.parametrize(
         "exception, url",
         (
-            (MissingSchema, "hiwpefhipowhefopw"),
-            (InvalidSchema, "localhost:3128"),
-            (InvalidSchema, "localhost.localdomain:3128/"),
-            (InvalidSchema, "10.122.1.1:3128/"),
+            (MissingScheme, "hiwpefhipowhefopw"),
+            (InvalidScheme, "localhost:3128"),
+            (InvalidScheme, "localhost.localdomain:3128/"),
+            (InvalidScheme, "10.122.1.1:3128/"),
             (InvalidURL, "http://"),
         ),
     )

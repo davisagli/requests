@@ -33,7 +33,7 @@ from .cookies import extract_cookies_to_jar
 from .exceptions import ConnectionError
 from .exceptions import ConnectTimeout
 from .exceptions import InvalidProxyURL
-from .exceptions import InvalidSchema
+from .exceptions import InvalidScheme
 from .exceptions import InvalidURL
 from .exceptions import ProxyError
 from .exceptions import ReadTimeout
@@ -54,7 +54,7 @@ try:
 except ImportError:
 
     def SOCKSProxyManager(*args, **kwargs):
-        raise InvalidSchema("Missing dependencies for SOCKS support.")
+        raise InvalidScheme("Missing dependencies for SOCKS support.")
 
 
 DEFAULT_POOLBLOCK = False
