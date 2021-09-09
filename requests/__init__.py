@@ -161,7 +161,6 @@ from .exceptions import (
     FileModeWarning,
     ConnectTimeout,
     ReadTimeout,
-    JSONDecodeError,
 )
 
 # Set default logging handler to avoid "No handler found" warnings.

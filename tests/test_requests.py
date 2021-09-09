@@ -2752,8 +2752,3 @@ class TestPreparingURLs:
         data = {"foo": float("nan")}
         with pytest.raises(requests.exceptions.InvalidJSONError):
             r = requests.post(httpbin("post"), json=data)
-
-    def test_json_decode_compatibility(self, httpbin):
-        r = requests.get(httpbin("bytes/20"))
-        with pytest.raises(requests.exceptions.JSONDecodeError):
-            r.json()

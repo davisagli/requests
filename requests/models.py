@@ -6,6 +6,7 @@ This module contains the primary objects that power Requests.
 """
 import datetime
 import encodings.idna
+import json as json_
 import sys
 from io import UnsupportedOperation
 
@@ -27,8 +28,6 @@ from .compat import Callable
 from .compat import chardet
 from .compat import cookielib
 from .compat import is_py2
-from .compat import json as complexjson
-from .compat import JSONDecodeError
 from .compat import Mapping
 from .compat import str
 from .compat import urlencode
@@ -43,7 +42,6 @@ from .exceptions import ContentDecodingError
 from .exceptions import HTTPError
 from .exceptions import InvalidJSONError
 from .exceptions import InvalidURL
-from .exceptions import JSONDecodeError as RequestsJSONDecodeError
 from .exceptions import MissingSchema
 from .exceptions import StreamConsumedError
 from .hooks import default_hooks
@@ -525,7 +523,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
             content_type = "application/json"
 
             try:
-                body = complexjson.dumps(json, allow_nan=False)
+                body = json_.dumps(json, allow_nan=False)
             except ValueError as ve:
                 raise InvalidJSONError(ve, request=self)
 
@@ -949,7 +947,7 @@ class Response:
         r"""Returns the json-encoded content of a response, if any.
 
         :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
-        :raises requests.exceptions.JSONDecodeError: If the response body does not
+        :raises json.JSONDecodeError: If the response body does not
             contain valid json.
         """
 
@@ -961,9 +959,7 @@ class Response:
             encoding = guess_json_utf(self.content)
             if encoding is not None:
                 try:
-                    return complexjson.loads(
-                        self.content.decode(encoding), **kwargs
-                    )
+                    return json_.loads(self.content.decode(encoding), **kwargs)
                 except UnicodeDecodeError:
                     # Wrong UTF codec detected; usually because it's not UTF-8
                     # but some other 8-bit codec.  This is an RFC violation,
@@ -971,15 +967,7 @@ class Response:
                     # used.
                     pass
 
-        try:
-            return complexjson.loads(self.text, **kwargs)
-        except JSONDecodeError as e:
-            # Catch JSON-related errors and raise as requests.JSONDecodeError
-            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
-            if is_py2:  # e is a ValueError
-                raise RequestsJSONDecodeError(e.message)
-            else:
-                raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+        return json_.loads(self.text, **kwargs)
 
     @property
     def links(self):
