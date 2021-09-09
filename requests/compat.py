@@ -58,7 +58,6 @@ if is_py2:
     basestring = basestring
     numeric_types = (int, long, float)
     integer_types = (int, long)
-    JSONDecodeError = ValueError
 
 elif is_py3:
     from urllib.parse import (
@@ -87,11 +86,6 @@ elif is_py3:
     # Keep OrderedDict for backwards compatibility.
     from collections import OrderedDict
     from collections.abc import Callable, Mapping, MutableMapping
-
-    if has_simplejson:
-        from simplejson import JSONDecodeError
-    else:
-        from json import JSONDecodeError
 
     builtin_str = str
     str = str

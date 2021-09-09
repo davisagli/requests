@@ -12,6 +12,9 @@ Release History
 - Remove the ``__bool__`` and ``__nonzero__`` methods from a ``Response``
   object. This resolves issue #2002.
 
+- Remove conditional usage of `simplejson` module. Requests now solely relies
+  on the Python 3+ `json` module for encoding and decoding.
+
 **Improvements**
 
 - Requests now relies on urllib3 for performing chunked requests.
