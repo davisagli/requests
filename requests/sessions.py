@@ -11,6 +11,7 @@ import time
 from collections import OrderedDict
 from datetime import timedelta
 
+from ._internal_utils import consume_response
 from ._internal_utils import to_native_string
 from .adapters import HTTPAdapter
 from .auth import _basic_auth_str
@@ -31,7 +32,6 @@ from .hooks import default_hooks
 from .hooks import dispatch_hook
 from .models import DEFAULT_REDIRECT_LIMIT
 from .models import PreparedRequest
-from .models import REDIRECT_STATI
 from .models import Request
 from .status_codes import codes
 from .structures import CaseInsensitiveDict
@@ -158,6 +158,95 @@ class SessionRedirectMixin:
         return changed_port or changed_scheme
 
     def resolve_redirects(
+        self,
+        resp,
+        req,
+        stream=False,
+        timeout=None,
+        verify=True,
+        cert=None,
+        proxies=None,
+        yield_requests=False,
+        **adapter_kwargs,
+    ):
+        """Receives a Response. Returns a generator of Responses or Requests."""
+        from . import redirects
+
+        logic = redirects.RedirectDecisionEngine(
+            config={
+                "allow_redirects": True,
+                "max_redirects": self.max_redirects,
+            }
+        )
+        decision = logic.decision_for(resp)
+
+        history = []
+        while decision.was_a_redirect():
+            next_request = req.copy()
+
+            consume_response(resp)
+            history.append(resp)
+
+            if decision.reason is decision.Reason.TOO_MANY_REDIRECTS:
+                raise TooManyRedirects(
+                    f"Exceeded {self.max_redirects} redirects.",
+                    response=resp,
+                )
+
+            next_url = decision.redirect_url
+            info = decision.redirect_information
+            next_request.url = next_url
+            next_request.method = info["next_method"]
+            next_request.headers = info["next_headers"]
+            next_request.body = info["next_body"]
+
+            # Extract any cookies sent on the response to the cookiejar
+            # in the new request. Because we've mutated our copied prepared
+            # request, use the old one that we haven't yet touched.
+            extract_cookies_to_jar(next_request._cookies, req, resp.raw)
+            merge_cookies(next_request._cookies, self.cookies)
+            next_request.prepare_cookies(next_request._cookies)
+
+            # Rebuild auth and proxy information.
+            proxies = self.rebuild_proxies(next_request, proxies)
+            self.rebuild_auth(next_request, resp)
+
+            # A failed tell() sets `_body_position` to `object()`. This non-None
+            # value ensures `rewindable` will be True, allowing us to raise an
+            # UnrewindableBodyError, instead of hanging the connection.
+            rewindable = next_request._body_position is not None and (
+                "Content-Length" in req.headers
+                or "Transfer-Encoding" in req.headers
+            )
+
+            # Attempt to rewind consumed file-like object.
+            if rewindable:
+                rewind_body(next_request)
+
+            if yield_requests:
+                yield next_request
+            else:
+                resp = self.send(
+                    next_request,
+                    stream=stream,
+                    timeout=timeout,
+                    verify=verify,
+                    cert=cert,
+                    proxies=proxies,
+                    allow_redirects=False,
+                    **adapter_kwargs,
+                )
+
+                extract_cookies_to_jar(self.cookies, next_request, resp.raw)
+                resp.history = history[:]
+
+                # extract redirect url, if any, for the next loop
+                yield resp
+
+            decision = logic.decision_for(resp)
+            req = next_request
+
+    def _resolve_redirects(
         self,
         resp,
         req,

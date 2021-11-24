@@ -242,6 +242,7 @@ class HTTPDigestAuth(AuthBase):
 
     def handle_redirect(self, r, **kwargs):
         """Reset num_401_calls counter on redirects."""
+        print("**** handle_redirect")
         if r.is_redirect:
             self._thread_local.num_401_calls = 1
 
@@ -252,6 +253,7 @@ class HTTPDigestAuth(AuthBase):
         :rtype: requests.Response
         """
 
+        print("**** handle_401")
         # If response is not 4xx, do not auth
         # See https://github.com/psf/requests/issues/3772
         if not 400 <= r.status_code < 500:
@@ -295,6 +297,7 @@ class HTTPDigestAuth(AuthBase):
     def __call__(self, r):
         # Initialize per-thread state, if needed
         self.init_per_thread_state()
+        print("**** __call__")
         # If we have a saved nonce, skip the 401
         if self._thread_local.last_nonce:
             r.headers["Authorization"] = self.build_digest_header(

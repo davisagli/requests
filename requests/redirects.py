@@ -41,8 +41,8 @@ class Decision:
     ):
         self.allow_redirect = allow_redirect
         self.reason = reason
-        self._redirect_information = kwargs
-        self._redirect_information.setdefault("strip_authentication", True)
+        self.redirect_information = kwargs
+        self.redirect_information.setdefault("strip_authentication", True)
 
     def was_a_redirect(self) -> bool:
         """Detect if the response was a redirect."""
@@ -58,7 +58,7 @@ class Decision:
     @property
     def redirect_url(self) -> t.Optional[str]:
         """Redirect to the user to this location."""
-        return self._redirect_information.get("redirect_to")
+        return self.redirect_information.get("redirect_to")
 
     def should_strip_authentication(self) -> bool:
         """Indicate if the consumer should remove sensitive auth.
@@ -66,7 +66,7 @@ class Decision:
         This is to prevent leaking authentication information to a third-party
         that isn't trusted to handle that data.
         """
-        return self._redirect_information["strip_authentication"]
+        return self.redirect_information["strip_authentication"]
 
 
 # TODO(sigmavirus24): Better name please
@@ -111,7 +111,6 @@ class RedirectDecisionEngine:
                 allow_redirect=False,
                 reason=Decision.Reason.USER_DISABLED_REDIRECTS,
             )
-
         if len(response.history) >= self.max_redirect_limit:
             # We've already followed the maximum number of redirects we want
             # to follow

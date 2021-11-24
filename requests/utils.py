@@ -39,6 +39,8 @@ from .compat import unquote
 from .compat import urlparse
 from .compat import urlunparse
 from .cookies import cookiejar_from_dict
+from .exceptions import ChunkedEncodingError
+from .exceptions import ContentDecodingError
 from .exceptions import FileModeWarning
 from .exceptions import InvalidHeader
 from .exceptions import InvalidURL

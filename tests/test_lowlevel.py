@@ -23,6 +23,9 @@ def test_chunked_upload():
     assert r.request.headers["Transfer-Encoding"] == "chunked"
 
 
+@pytest.mark.xfail(
+    reason="Sending a 302 to the same host which we don't actually want to strip auth for. Test needs to be rethought."
+)
 def test_digestauth_401_count_reset_on_redirect():
     """Ensure we correctly reset num_401_calls after a successful digest auth,
     followed by a 302 redirect to another digest auth prompt.
@@ -38,12 +41,10 @@ def test_digestauth_401_count_reset_on_redirect():
     )
 
     text_302 = (
-        b"HTTP/1.1 302 FOUND\r\n"
-        b"Content-Length: 0\r\n"
-        b"Location: /\r\n\r\n"
+        b"HTTP/1.1 302 FOUND\r\nContent-Length: 0\r\nLocation: /\r\n\r\n"
     )
 
-    text_200 = b"HTTP/1.1 200 OK\r\n" b"Content-Length: 0\r\n\r\n"
+    text_200 = b"HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"
 
     expected_digest = (
         b'Authorization: Digest username="user", '
@@ -58,22 +59,27 @@ def test_digestauth_401_count_reset_on_redirect():
         request_content = consume_socket_content(sock, timeout=0.5)
         assert request_content.startswith(b"GET / HTTP/1.1")
         sock.send(text_401)
+        print("*** Sent 401")
 
         # Verify we receive an Authorization header in response, then redirect.
         request_content = consume_socket_content(sock, timeout=0.5)
         assert expected_digest in request_content
         sock.send(text_302)
+        print("*** Sent 302")
 
         # Verify Authorization isn't sent to the redirected host,
         # then send another challenge.
         request_content = consume_socket_content(sock, timeout=0.5)
+        print(request_content)
         assert b"Authorization:" not in request_content
         sock.send(text_401)
+        print("*** Sent another 401")
 
         # Verify Authorization is sent correctly again, and return 200 OK.
         request_content = consume_socket_content(sock, timeout=0.5)
         assert expected_digest in request_content
         sock.send(text_200)
+        print("*** Sent 200")
 
         return request_content
 
@@ -81,6 +87,9 @@ def test_digestauth_401_count_reset_on_redirect():
     server = Server(digest_response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
+        # fmt: off
+        # import pytest; pytest.set_trace()
+        # fmt: on
         url = f"http://{host}:{port}/"
         r = requests.get(url, auth=auth)
         # Verify server succeeded in authenticating.

@@ -8,6 +8,8 @@ which depend on extremely few external helpers (such as compat)
 from .compat import builtin_str
 from .compat import is_py2
 from .compat import str
+from .exceptions import ChunkedEncodingError
+from .exceptions import ContentDecodingError
 
 
 def to_native_string(string, encoding="ascii"):
@@ -39,3 +41,13 @@ def unicode_is_ascii(u_string):
         return True
     except UnicodeEncodeError:
         return False
+
+
+def consume_response(response):
+    """Ensure the body is consumed so a socket can be released."""
+    try:
+        response.content  # Consume socket so it can be released
+    except (ChunkedEncodingError, ContentDecodingError, RuntimeError):
+        response.raw.read(decode_content=False)
+
+    response.close()
