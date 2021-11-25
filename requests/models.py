@@ -674,7 +674,6 @@ class Response:
     def __init__(self):
         self._content = False
         self._content_consumed = False
-        self._next = None
 
         #: Integer Code of responded HTTP Status, e.g. 404 or 200.
         self.status_code = None
@@ -778,11 +777,6 @@ class Response:
             codes.moved_permanently,
             codes.permanent_redirect,
         )
-
-    @property
-    def next(self):
-        """Returns a PreparedRequest for the next request in a redirect chain, if there is one."""
-        return self._next
 
     @property
     def apparent_encoding(self):

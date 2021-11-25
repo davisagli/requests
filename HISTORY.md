@@ -19,6 +19,13 @@ Release History
   MissingSchema exceptions. Renamed to InvalidScheme and MissingScheme
   respectively. (#4495)
 
+- Remove ``yield_requests`` from ``Session.resolve_redirects``. It was a poor
+  API with little thought applied to the design.
+
+- Remove ``Response.next`` attribute
+
+- Remove ``SessionRedirectMixin`` as it provides no purpose
+
 **Improvements**
 
 - Requests now relies on urllib3 for performing chunked requests.
